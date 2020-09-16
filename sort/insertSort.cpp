@@ -15,18 +15,6 @@ void mostrar_arreglo(int v[], int n){
     }
 }
 
-void ord_insercion(int v[], int n){
-    int k=0;
-    while(k<n){
-        int t=k;
-        int i;
-        for(i=k;i<0&&v[i-1]>t;--i){
-            v[i]=v[i-1];
-        }
-        v[i]=t;
-        ++k;
-    }
-}
 
 void insercion(int v[], int n) {
   int i, a, index;
