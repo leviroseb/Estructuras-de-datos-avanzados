@@ -1,80 +1,71 @@
-#include <iostream>
+#include<iostream>
+#include<algorithm>
 #include<time.h>
 using namespace std;
 
-void merge(int arr[], int p, int q, int r) {
-  
-  int n1 = q - p + 1;
-  int n2 = r - q;
-
-  int L[n1], M[n2];
-
-  for (int i = 0; i < n1; i++)
-    L[i] = arr[p + i];
-  for (int j = 0; j < n2; j++)
-    M[j] = arr[q + 1 + j];
-
-  int i, j, k;
-  i = 0;
-  j = 0;
-  k = p;
-
-  while (i < n1 && j < n2) {
-    if (L[i] <= M[j]) {
-      arr[k] = L[i];
-      i++;
-    } else {
-      arr[k] = M[j];
-      j++;
+//intercalacion
+void intercala(int* A, int p, int q, int r){
+    int i,j;
+    int *B=new int[r-p+1];
+    for(i=p;i<=q;i++){
+        B[i]=A[i];
     }
-    k++;
-  }
 
-  while (i < n1) {
-    arr[k] = L[i];
-    i++;
-    k++;
-  }
+    for(j=q+1;j<=r;j++){
+        B[r+q+1-j]=A[j];
+    }
+    i=p;
+    j=r;
+    for(int k=p;k<=r;k++){
+        if(B[i]<=B[j]){
+            A[k]=B[i];
+            i=i+1;
+        }
+        else{
+            A[k]=B[j];
+            j=j-1;
+        }
+    }
 
-  while (j < n2) {
-    arr[k] = M[j];
-    j++;
-    k++;
-  }
 }
 
-void mergeSort(int arr[], int l, int r) {
-
-  if (l < r) {
-
-    int m = l + (r - l) / 2;
-    mergeSort(arr, l, m);
-    mergeSort(arr, m + 1, r);
-    merge(arr, l, m, r);
-  }
-
-  
+void mergesort(int *A,int p, int r){
+    if(p<r){
+        int q=(p+r)/2;
+        mergesort(A,p,q);
+        mergesort(A,q+1,r);
+        intercala(A,p,q,r);
+    }
 }
 
 
-
-void crear_arreglo(int *v, int n){
+void crear_arreglo(int *A, int n){
     int num,c;
     srand(time(NULL));
 
     for(c=1;c<=n;c++){
-        num=1+rand()%(2001-1);
-        v[c]=num;
+        num=1+rand()%(10000-1);
+        A[c]=num;
 
     }
 }
 
-int main() {
- for(int i=100;i<4000;i=i+100){
-        int *v=new int[i];
-        crear_arreglo(v,i);
-        mergeSort(v,0,i-1);
-        delete[] v;
+
+int main()
+{
+    
+    unsigned t0,t1;
+    double time;
+    for(int i=1000;i<=100000;i=i+1000){
+        int *A=new int[i];
+        crear_arreglo(A,i);
+        t0=clock();
+        mergesort(A, 0,i-1);
+        t1=clock();
+        time = (double(t1-t0)/CLOCKS_PER_SEC*1000000);
+        std::cout << "Tiempo: " << time << std::endl;
+        delete[] A;
     }
-  return 0;
+    system("pause");
+    return 0;
 }
